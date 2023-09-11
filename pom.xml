@@ -9,11 +9,11 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.marRover</groupId>
-	<artifactId>rover</artifactId>
+	<artifactId>roverService</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>rover</name>
-	<description>Mars rover kata</description>
+	<name>roverService</name>
+	<description>Mars roverService kata</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>

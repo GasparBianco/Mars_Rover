@@ -1,18 +1,15 @@
 package com.marRover.rover.controllers;
 
-import com.marRover.rover.Map;
-import com.marRover.rover.Rover;
+import com.marRover.rover.services.MapService;
+import com.marRover.rover.services.RoverService;
 import com.marRover.rover.Responses.RoverResponse;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.http.HttpResponse;
-
 @RestController
 public class RoverController {
-    private Rover rover;
+    private RoverService roverService;
     private RoverResponse roverResponse;
     private final MapController mapController;
 
@@ -21,8 +18,8 @@ public class RoverController {
     }
     @GetMapping("/rover")
     public ResponseEntity<RoverResponse> roverStatus(){
-        if (rover!=null){
-            roverResponse.entity = rover;
+        if (roverService !=null){
+            roverResponse.entity = roverService;
             return new ResponseEntity<>(roverResponse, HttpStatus.OK);
         }else{
             roverResponse.exception = "No existe ningun rover";
@@ -31,12 +28,12 @@ public class RoverController {
     }
     @PostMapping("/rover/createRover")
     public ResponseEntity<RoverResponse> createDefaultRover(){
-        Map map = mapController.getMap();
+        MapService mapService = mapController.getMap();
         RoverResponse roverResponse = new RoverResponse();
-        if (rover == null && map!=null){
+        if (roverService == null && mapService !=null){
             try {
-                rover = new Rover(map);
-                roverResponse.entity = rover;
+                roverService = new RoverService(mapService);
+                roverResponse.entity = roverService;
                 return new ResponseEntity<>(roverResponse, HttpStatus.CREATED);
             }catch(Exception e){
                 roverResponse.exception = e.getMessage();
@@ -50,12 +47,12 @@ public class RoverController {
     }
     @PostMapping("/rover/createCustomRover/{x}/{y}/{facing}")
     public ResponseEntity<RoverResponse> createCustomRover(@PathVariable int x, @PathVariable int y, @PathVariable int facing){
-        Map map = mapController.getMap();
+        MapService mapService = mapController.getMap();
         RoverResponse roverResponse = new RoverResponse();
-        if (rover == null && map!=null){
+        if (roverService == null && mapService !=null){
             try{
-                rover = new Rover(map,x,y,facing);
-                roverResponse.entity = rover;
+                roverService = new RoverService(mapService,x,y,facing);
+                roverResponse.entity = roverService;
                 return new ResponseEntity<>(roverResponse, HttpStatus.CREATED);
             }catch(Exception e){
                 roverResponse.exception = e.getMessage();
@@ -69,9 +66,9 @@ public class RoverController {
     }
     @PostMapping("/rover/input/{input}")
     public ResponseEntity<RoverResponse> sendInputToRover(@PathVariable String input){
-        if (rover!=null){
-            rover.input(input);
-            roverResponse.entity = rover;
+        if (roverService !=null){
+            roverService.input(input);
+            roverResponse.entity = roverService;
             return new ResponseEntity<>(roverResponse, HttpStatus.OK);
         }else{
             roverResponse.exception = "No existe ningun rover.";
@@ -80,7 +77,7 @@ public class RoverController {
     }
     @PostMapping("/reset")
     public HttpStatus reset(){
-        this.rover = null;
+        this.roverService = null;
         roverResponse = null;
         mapController.setMapToNull();
         return HttpStatus.OK;

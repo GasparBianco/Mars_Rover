@@ -9,19 +9,19 @@ public class MapEntityServiceTest {
     @Test
     public void shouldCreateADefaultMapWithXAndYInt(){
         MapService mapService = new MapService();
-        Assertions.assertNotNull(mapService.getX());
-        Assertions.assertNotNull(mapService.getY());
+        Assertions.assertNotNull(mapService.getMapSizeX());
+        Assertions.assertNotNull(mapService.getMapSizeY());
     }
 
     @Test
     public void shouldCreateACustomMapWithXAndYInt(){
         MapService mapService = new MapService(5,7);
-        Assertions.assertEquals(5, mapService.getX());
-        Assertions.assertEquals(7, mapService.getY());
+        Assertions.assertEquals(5, mapService.getMapSizeX());
+        Assertions.assertEquals(7, mapService.getMapSizeY());
 
         MapService mapService2 = new MapService(15,27);
-        Assertions.assertEquals(15, mapService2.getX());
-        Assertions.assertEquals(27, mapService2.getY());
+        Assertions.assertEquals(15, mapService2.getMapSizeX());
+        Assertions.assertEquals(27, mapService2.getMapSizeY());
     }
     @Test
     public void xAndYShouldNeverBeEqualsOrLessThanZero() {

@@ -11,7 +11,7 @@ public class RoverEntityServiceTest {
     public void whenRoverIsCreatedHaveToChangeRoverInMapToTrue(){
         MapService mapService = new MapService();
         RoverService roverService = new RoverService(mapService);
-        Assertions.assertTrue(mapService.isRover());
+        Assertions.assertTrue(mapService.isHasRover());
     }
 
     @Test
@@ -76,39 +76,39 @@ public class RoverEntityServiceTest {
     public void roverInputLShouldDecreaseByOneTheFacing(){
         RoverService roverService = new RoverService(new MapService(), 0, 0, 3);
         roverService.input("l");
-        Assertions.assertEquals(2, roverService.getFacing());
+        Assertions.assertEquals(2, roverService.getDirection());
         roverService.input("ll");
-        Assertions.assertEquals(0, roverService.getFacing());
+        Assertions.assertEquals(0, roverService.getDirection());
     }
     @Test
     public void roverInputRShouldIncreaseByOneTheFacing(){
         RoverService roverService = new RoverService(new MapService(), 0, 0, 0);
         roverService.input("r");
-        Assertions.assertEquals(1, roverService.getFacing());
+        Assertions.assertEquals(1, roverService.getDirection());
         roverService.input("rr");
-        Assertions.assertEquals(3, roverService.getFacing());
+        Assertions.assertEquals(3, roverService.getDirection());
     }
     @Test
     public void roverFacingAlwaysHaveToBeBetweenZeroAndThree(){
         RoverService roverService = new RoverService(new MapService(), 0, 0, 3);
         roverService.input("l");
-        Assertions.assertEquals(2, roverService.getFacing());
+        Assertions.assertEquals(2, roverService.getDirection());
         roverService.input("ll");
-        Assertions.assertEquals(0, roverService.getFacing());
+        Assertions.assertEquals(0, roverService.getDirection());
         roverService.input("l");
-        Assertions.assertEquals(3, roverService.getFacing());
+        Assertions.assertEquals(3, roverService.getDirection());
         roverService.input("lllll");
-        Assertions.assertEquals(2, roverService.getFacing());
+        Assertions.assertEquals(2, roverService.getDirection());
 
         RoverService roverService2 = new RoverService(new MapService(), 0, 0, 3);
         roverService2.input("r");
-        Assertions.assertEquals(0, roverService2.getFacing());
+        Assertions.assertEquals(0, roverService2.getDirection());
         roverService2.input("rr");
-        Assertions.assertEquals(2, roverService2.getFacing());
+        Assertions.assertEquals(2, roverService2.getDirection());
         roverService2.input("r");
-        Assertions.assertEquals(3, roverService2.getFacing());
+        Assertions.assertEquals(3, roverService2.getDirection());
         roverService2.input("rrrrr");
-        Assertions.assertEquals(0, roverService2.getFacing());
+        Assertions.assertEquals(0, roverService2.getDirection());
     }
     @Test
     public void roverMovementForwardNorth(){
@@ -171,6 +171,6 @@ public class RoverEntityServiceTest {
         RoverService roverService = new RoverService(new MapService(1,1),0,0,0);
         roverService.input("ffrffrffrffr");
         Assertions.assertArrayEquals(new int[]{0,0}, roverService.position());
-        Assertions.assertEquals(0, roverService.getFacing());
+        Assertions.assertEquals(0, roverService.getDirection());
     }
 }

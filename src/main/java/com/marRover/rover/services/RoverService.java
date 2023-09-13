@@ -1,6 +1,5 @@
 package com.marRover.rover.services;
 
-import com.marRover.rover.services.MapService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
@@ -9,34 +8,34 @@ public class RoverService {
     private final MapService mapService;
     private int x;
     private int y;
-    private int facing;
+    private int direction;
 
     public RoverService(@NotNull MapService mapService){
-        if (mapService.isRover()){
+        if (mapService.isHasRover()){
             throw new IllegalCallerException("Solo puede haber un rover");
         }
         int[] coords = mapService.findEmptyCoordinate();
         this.mapService = mapService;
-        this.mapService.setRover(true);
+        this.mapService.setHasRover(true);
         x = coords[0];
         y = coords[1];
-        facing = 0;
+        direction = 0;
     }
-    public RoverService(@NotNull MapService mapService, int x, int y, int facing){
+    public RoverService(@NotNull MapService mapService, int x, int y, int direction){
         this.roverValidations(mapService, x, y);
 
         this.mapService = mapService;
-        this.mapService.setRover(true);
+        this.mapService.setHasRover(true);
         this.x = x;
         this.y = y;
-        this.facing = facing;
+        this.direction = direction;
     }
 
     private void roverValidations(MapService mapService, int x, int y){
-        if (x > mapService.getX() || x < 0 || y < 0 || y > mapService.getY()){
+        if (x > mapService.getMapSizeX() || x < 0 || y < 0 || y > mapService.getMapSizeY()){
             throw new IllegalArgumentException("Las coordenadas deben estar dentro del mapa");
         }
-        if (mapService.isRover()){
+        if (mapService.isHasRover()){
             throw new IllegalCallerException("Solo puede haber un rover");
         }
         if(!mapService.checkEmptyObstaclePosition(new int[] {x,y})){
@@ -61,41 +60,45 @@ public class RoverService {
     }
     private void executeCommand(Character c){
         switch (c) {
-            case 'l' -> this.facing = (this.facing + 3) % 4;
-            case 'r' -> this.facing = (this.facing + 1) % 4;
+            case 'l' -> this.direction = (this.direction + 3) % 4;
+            case 'r' -> this.direction = (this.direction + 1) % 4;
             case 'b' -> this.movement('b');
             case 'f' -> this.movement('f');
         }
     }
     private void movement(Character command){
-        if ((command == 'f' && this.facing == 0) || (command == 'b' && this.facing == 2) ){
+        int north = 0;
+        int east = 1;
+        int south = 2;
+        int west = 3;
+        if ((command == 'f' && this.direction == north) || (command == 'b' && this.direction == south) ){
             int[] new_position = new int[2];
             new_position[0] = x;
-            new_position[1] = (y + 1) % mapService.getY();
+            new_position[1] = (y + 1) % mapService.getMapSizeY();
             if (this.mapService.checkEmptyObstaclePosition(new_position)){
 
                 y = new_position[1];
                 return;
             }
-        }else if ((command == 'f' && this.facing == 2) || (command == 'b' && this.facing == 0) ){
+        }else if ((command == 'f' && this.direction == south) || (command == 'b' && this.direction == north) ){
             int[] new_position = new int[2];
             new_position[0] = x;
-            new_position[1] = (y + mapService.getY() - 1) % mapService.getY();
+            new_position[1] = (y + mapService.getMapSizeY() - 1) % mapService.getMapSizeY();
             if (this.mapService.checkEmptyObstaclePosition(new_position)){
                 y = new_position[1];
                 return;
             }
-        }else if ((command == 'f' && this.facing == 1) || (command == 'b' && this.facing == 3) ){
+        }else if ((command == 'f' && this.direction == east) || (command == 'b' && this.direction == west) ){
             int[] new_position = new int[2];
-            new_position[0] = (x + 1) % mapService.getX();
+            new_position[0] = (x + 1) % mapService.getMapSizeX();
             new_position[1] = y;
             if (this.mapService.checkEmptyObstaclePosition(new_position)){
                 x = new_position[0];
                 return;
             }
-        }else if ((command == 'f' && this.facing == 3) || (command == 'b' && this.facing == 1) ){
+        }else if ((command == 'f' && this.direction == west) || (command == 'b' && this.direction == east) ){
             int[] new_position = new int[2];
-            new_position[0] = (x + mapService.getX() - 1) % mapService.getX();
+            new_position[0] = (x + mapService.getMapSizeX() - 1) % mapService.getMapSizeX();
             new_position[1] = y;
             if (this.mapService.checkEmptyObstaclePosition(new_position)){
                 x = new_position[0];
@@ -104,8 +107,8 @@ public class RoverService {
         }
         throw new RuntimeException("Existe un obstaculo en el camino, no se puedo completar el comando");
     }
-    public int getFacing(){
-        return facing;
+    public int getDirection(){
+        return direction;
     }
     public MapService getMap() {
         return mapService;

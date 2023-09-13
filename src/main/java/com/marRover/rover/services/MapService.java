@@ -7,24 +7,24 @@ import java.util.Random;
 
 @Service
 public class MapService {
-    private final int x;
-    private final int y;
+    private final int mapSizeX;
+    private final int mapSizeY;
 
-    private  boolean rover = false;
+    private  boolean hasRover = false;
     private ArrayList<int[]> obstacles = new ArrayList<>();
-    public MapService(int x, int y) {
-        if (x <= 0 || y <= 0) {
+    public MapService(int mapSizeX, int mapSizeY) {
+        if (mapSizeX <= 0 || mapSizeY <= 0) {
             throw new IllegalArgumentException("Los valores de x e y deben ser mayores que cero.");
         }
-        this.x = x;
-        this.y = y;
+        this.mapSizeX = mapSizeX;
+        this.mapSizeY = mapSizeY;
     }
     public MapService(){
-        this.x = 10;
-        this.y = 10;
+        this.mapSizeX = 10;
+        this.mapSizeY = 10;
     }
     public void deleteRandomObstacle() {
-        if (rover){
+        if (hasRover){
             throw new IllegalCallerException("No se pueden editar los obstaculos cuando ya hay un rover desplegado");
         }
         if (obstacles.isEmpty()){
@@ -36,7 +36,7 @@ public class MapService {
         }
     }
     public void deleteCustomObstacle(int x, int y){
-        if (rover){
+        if (hasRover){
             throw new IllegalCallerException("No se pueden editar los obstaculos cuando ya hay un rover desplegado");
         }
         int[] coords = new int[2];
@@ -51,7 +51,7 @@ public class MapService {
         throw new NullPointerException("No existe ningun obstaculo en las coordenadas otorgadas");
     }
     public void createCustomObstacle(int x, int y) {
-        if (rover){
+        if (hasRover){
             throw new IllegalCallerException("No se pueden editar los obstaculos cuando ya hay un rover desplegado");
         }
         int[] coords = new int[2];
@@ -66,13 +66,13 @@ public class MapService {
         }
     }
     public void createRandomObstacle(){
-        if (rover){
+        if (hasRover){
             throw new IllegalCallerException("No se pueden editar los obstaculos cuando ya hay un rover desplegado");
         }
         int [] coords = new int[2];
         Random random = new Random();
-        coords[0] = random.nextInt(this.getX()+1);
-        coords[1] = random.nextInt(this.getY()+1);
+        coords[0] = random.nextInt(this.getMapSizeX()+1);
+        coords[1] = random.nextInt(this.getMapSizeY()+1);
         if (obstacles.isEmpty()){
             obstacles.add(coords);
         }else if(checkEmptyObstaclePosition(coords)){
@@ -94,8 +94,8 @@ public class MapService {
     }
 
     public int[] findEmptyCoordinate() {
-        for (int i = 0; i <= x; i++) {
-            for (int j = 0; j <= y; j++) {
+        for (int i = 0; i <= mapSizeX; i++) {
+            for (int j = 0; j <= mapSizeY; j++) {
                 int[] coords = {i, j};
                 if (this.checkEmptyObstaclePosition(coords)) {
                     return coords;
@@ -109,17 +109,17 @@ public class MapService {
         return obstacles;
     }
 
-    public int getY() {
-        return y;
+    public int getMapSizeY() {
+        return mapSizeY;
     }
-    public int getX() {
-        return x;
+    public int getMapSizeX() {
+        return mapSizeX;
     }
-    public boolean isRover() {
-        return rover;
+    public boolean isHasRover() {
+        return hasRover;
     }
 
-    public void setRover(boolean rover) {
-        this.rover = rover;
+    public void setHasRover(boolean hasRover) {
+        this.hasRover = hasRover;
     }
 }
